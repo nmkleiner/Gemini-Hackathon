@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonClasses" :disabled="disabled" :data-qa-id="dataQaId">
+  <button :class="buttonClasses">
     <slot name="beforeText"></slot>
     {{ text }}
     <slot></slot>

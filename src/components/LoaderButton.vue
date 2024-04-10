@@ -6,11 +6,11 @@
   </Button>
 </template>
 <script setup lang="ts">
-import Button from './Button.vue';
-import { ButtonProps } from '@/Modules/Common/Components/Form/Buttons/button-props';
+import Button from "./Button.vue";
+import { ButtonProps } from "./button-props.ts";
 
 const props = withDefaults(defineProps<ButtonProps & { loading: boolean }>(), {
-  text: '',
+  text: "",
   primary: false,
   secondary: false,
   textOnly: false,
