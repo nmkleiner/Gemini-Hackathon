@@ -12,25 +12,49 @@
       :options="{
         viewMode: 1,
         dragMode: 'crop',
-        aspectRatio: 16 / 9,
+        aspectRatio: 1 / 1,
       }"
     />
+
+    <div class="footer">
+      <Button primary :text="'crop item'" @click="crop"></Button>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import VuePictureCropper, { cropper } from "vue-picture-cropper";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
+import Button from "@/components/Button.vue";
 
 const props = defineProps<{ picture: Blob }>();
 const cropPicture = ref<string>();
 
-onMounted(() => {
+const loadPicture = () => {
   const reader = new FileReader();
   reader.readAsDataURL(props.picture);
-  reader.onload = () => {
-    cropPicture.value = String(reader.result);
-  };
+  reader.onload = () => (cropPicture.value = String(reader.result));
+};
+
+onMounted(loadPicture);
+
+const result = reactive({
+  dataURL: "",
+  blobURL: "",
 });
+const crop = async () => {
+  if (!cropper) return;
+  const base64 = cropper.getDataURL();
+  const blob: Blob | null = await cropper.getBlob();
+  if (!blob) return;
+
+  const file = await cropper.getFile({
+    fileName: "cropped-item.jpg",
+  });
+  console.log({ base64, blob, file });
+  result.dataURL = base64;
+  result.blobURL = URL.createObjectURL(blob);
+  //   send blob to server
+};
 </script>
 <style scoped lang="scss">
 .cropperContainer {
