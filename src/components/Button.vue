@@ -34,16 +34,15 @@ const buttonClasses = computed(() => [
   align-items: center;
   justify-content: center;
   border: none;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
 
   &.primary,
   &.secondary {
-    height: 44px;
-    padding: 16px 40px;
-    border-radius: 22px;
+    padding: 20px 40px;
+    border-radius: 8px;
   }
 
   &.primary {

@@ -5,28 +5,35 @@
       :boxStyle="{
         width: '100%',
         height: '100%',
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#000',
         margin: 'auto',
       }"
       :img="cropPicture"
       :options="{
         viewMode: 1,
         dragMode: 'crop',
-        aspectRatio: 1 / 1,
+        aspectRatio: 1,
       }"
     />
 
     <div class="footer">
-      <Button primary :text="'crop item'" @click="crop"></Button>
+      <LoaderButton
+        primary
+        :text="isLoading ? 'analyzing' : 'crop item'"
+        @click="crop"
+        :loading="isLoading"
+      ></LoaderButton>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import VuePictureCropper, { cropper } from "vue-picture-cropper";
-import { onMounted, reactive, ref } from "vue";
-import Button from "@/components/Button.vue";
+import { onMounted, ref } from "vue";
+import LoaderButton from "@/components/LoaderButton.vue";
 
-const props = defineProps<{ picture: Blob }>();
+const props = defineProps<{ picture: Blob; isLoading: boolean }>();
+const emit = defineEmits({ cropPicture: (blob: Blob) => blob.size });
+
 const cropPicture = ref<string>();
 
 const loadPicture = () => {
@@ -34,26 +41,15 @@ const loadPicture = () => {
   reader.readAsDataURL(props.picture);
   reader.onload = () => (cropPicture.value = String(reader.result));
 };
-
 onMounted(loadPicture);
 
-const result = reactive({
-  dataURL: "",
-  blobURL: "",
-});
 const crop = async () => {
   if (!cropper) return;
-  const base64 = cropper.getDataURL();
+
   const blob: Blob | null = await cropper.getBlob();
   if (!blob) return;
 
-  const file = await cropper.getFile({
-    fileName: "cropped-item.jpg",
-  });
-  console.log({ base64, blob, file });
-  result.dataURL = base64;
-  result.blobURL = URL.createObjectURL(blob);
-  //   send blob to server
+  emit("cropPicture", blob);
 };
 </script>
 <style scoped lang="scss">

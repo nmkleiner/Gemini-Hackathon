@@ -5,10 +5,26 @@
       v-if="activeState === 'camera'"
       @take-picture="handlePictureTaken"
     />
-    <Cropper v-if="activeState === 'cropper'" :picture="picture" />
+    <Cropper
+      v-if="activeState === 'cropper'"
+      :picture="picture"
+      :is-loading="isLoading"
+      @cropPicture="handlePictureCropped"
+    />
+
+    <img
+      v-if="activeState === 'results'"
+      :src="croppedPicture"
+      alt="cropped item"
+    />
 
     <div class="footer" v-if="activeState === 'initial'">
-      <Button class="mainButton" :text primary @click="openCamera" />
+      <Button
+        class="mainButton"
+        :text="'scan your item'"
+        primary
+        @click="openCamera"
+      />
     </div>
   </div>
 </template>
@@ -18,21 +34,33 @@ import Button from "./components/Button.vue";
 import Camera from "./components/Camera.vue";
 import Cropper from "./components/Cropper.vue";
 
-const text = "click to scan item";
-
 const activeState = ref<"initial" | "camera" | "cropper" | "results">(
   "initial",
 );
-
-const picture = ref<Blob | null>(null);
 
 const openCamera = () => {
   activeState.value = "camera";
 };
 
+const picture = ref<Blob | null>(null);
+
 const handlePictureTaken = (blob: Blob) => {
   picture.value = blob;
   activeState.value = "cropper";
+};
+
+const isLoading = ref(false);
+const croppedPicture = ref<string>("");
+
+const handlePictureCropped = async (blob: Blob) => {
+  const getItemDetails = async () => {
+    isLoading.value = true;
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    isLoading.value = false;
+  };
+  croppedPicture.value = URL.createObjectURL(blob);
+  await getItemDetails();
+  activeState.value = "results";
 };
 </script>
 
