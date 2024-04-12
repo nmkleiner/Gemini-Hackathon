@@ -1,11 +1,15 @@
 <template>
   <div class="container">
-    <div class="footer" v-if="isInitialState">
-      <Button class="mainButton" :text primary @click="onClick" />
-    </div>
+    <div class="logo" v-if="activeState === 'initial'">ItemScanner</div>
+    <Camera
+      v-if="activeState === 'camera'"
+      @take-picture="handlePictureTaken"
+    />
+    <Cropper v-if="activeState === 'cropper'" :picture="picture" />
 
-    <Camera v-if="cameraActive" @take-picture="handlePictureTaken" />
-    <Cropper v-if="cropActive" :picture="picture" />
+    <div class="footer" v-if="activeState === 'initial'">
+      <Button class="mainButton" :text primary @click="openCamera" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -16,20 +20,19 @@ import Cropper from "./components/Cropper.vue";
 
 const text = "click to scan item";
 
-const isInitialState = ref(true);
-const cameraActive = ref(false);
-const picture = ref<Blob | null>(null);
-const cropActive = ref(false);
+const activeState = ref<"initial" | "camera" | "cropper" | "results">(
+  "initial",
+);
 
-const onClick = () => {
-  cameraActive.value = true;
-  isInitialState.value = false;
+const picture = ref<Blob | null>(null);
+
+const openCamera = () => {
+  activeState.value = "camera";
 };
 
 const handlePictureTaken = (blob: Blob) => {
-  cameraActive.value = false;
   picture.value = blob;
-  cropActive.value = true;
+  activeState.value = "cropper";
 };
 </script>
 
@@ -41,7 +44,13 @@ const handlePictureTaken = (blob: Blob) => {
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: black;
+
+  .logo {
+    font-size: 40px;
+    font-weight: bold;
+    color: #00a9e4;
+    font-family: "Roboto, sans-serif";
+  }
 
   .footer {
     .mainButton {
