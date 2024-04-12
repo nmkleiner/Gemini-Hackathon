@@ -7,7 +7,7 @@
 </template>
 <script setup lang="ts">
 import Button from "./Button.vue";
-import { ButtonProps } from "./button-props.ts";
+import { ButtonProps } from "./button-props";
 
 const props = withDefaults(defineProps<ButtonProps & { loading: boolean }>(), {
   text: "",

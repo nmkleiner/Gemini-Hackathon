@@ -6,7 +6,7 @@
   </button>
 </template>
 <script lang="ts" setup>
-import { ButtonProps } from "./button-props.ts";
+import { ButtonProps } from "./button-props";
 import { computed } from "vue";
 
 const props = withDefaults(defineProps<ButtonProps>(), {
