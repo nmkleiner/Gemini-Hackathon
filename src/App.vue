@@ -8,19 +8,25 @@
     />
 
     <Camera v-if="cameraActive" @take-picture="handlePictureTaken" />
+    <Cropper v-if="cropActive" :picture="picture" />
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
 import Button from "./components/Button.vue";
 import Camera from "./components/Camera.vue";
+import Cropper from "./components/Cropper.vue";
 
 const text = "click to scan item";
+
 const cameraActive = ref(false);
+const picture = ref<Blob | null>(null);
+const cropActive = ref(false);
 
 const handlePictureTaken = (blob: Blob) => {
-  console.log("Picture taken", blob);
   cameraActive.value = false;
+  picture.value = blob;
+  cropActive.value = true;
 };
 </script>
 
