@@ -12,19 +12,15 @@ import Button from "@/components/Button.vue";
 import { ref } from "vue";
 
 const cameraRef = ref<InstanceType<typeof Camera>>();
+
+const emit = defineEmits({ takePicture: (blob: Blob) => blob.size });
 const takePicture = async () => {
   if (!cameraRef.value) throw new Error("Camera not found");
 
   const blob = await cameraRef.value.snapshot();
 
   if (!blob) throw new Error("No image found");
-
-  const url = URL.createObjectURL(blob);
-  //   download the blob
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "image.jpg";
-  a.click();
+  emit("takePicture", blob);
 };
 </script>
 

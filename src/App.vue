@@ -7,16 +7,21 @@
       @click="() => (cameraActive = true)"
     />
 
-    <Camera v-if="cameraActive" />
+    <Camera v-if="cameraActive" @take-picture="handlePictureTaken" />
   </div>
 </template>
-<script setup lang="js">
+<script setup lang="ts">
 import { ref } from "vue";
 import Button from "./components/Button.vue";
 import Camera from "./components/Camera.vue";
 
 const text = "click to scan item";
 const cameraActive = ref(false);
+
+const handlePictureTaken = (blob: Blob) => {
+  console.log("Picture taken", blob);
+  cameraActive.value = false;
+};
 </script>
 
 <style scoped lang="scss">
