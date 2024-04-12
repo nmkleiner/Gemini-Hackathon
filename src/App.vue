@@ -35,6 +35,7 @@ const handlePictureTaken = (blob: Blob) => {
 
 <style scoped lang="scss">
 .container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
