@@ -1,7 +1,7 @@
 <template>
   <div class="cameraContainer">
-    <camera ref="cameraRef" autoplay></camera>
-    <div class="footer">
+    <camera ref="cameraRef" autoplay @started="onStart"></camera>
+    <div class="footer" v-if="displayButton">
       <Button primary :text="'scan item'" @click="takePicture"></Button>
     </div>
   </div>
@@ -12,6 +12,9 @@ import Button from "@/components/Button.vue";
 import { ref } from "vue";
 
 const cameraRef = ref<InstanceType<typeof Camera>>();
+
+const displayButton = ref(false);
+const onStart = () => (displayButton.value = true);
 
 const emit = defineEmits({ takePicture: (blob: Blob) => blob.size });
 const takePicture = async () => {
