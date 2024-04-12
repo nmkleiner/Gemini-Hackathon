@@ -55,7 +55,8 @@ const takePicture = () => {
     flex-direction: column;
 
     .buttonContainer {
-      padding-bottom: 40px;
+      position: absolute;
+      bottom: 40px;
     }
   }
 }
