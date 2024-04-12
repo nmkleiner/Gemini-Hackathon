@@ -13,7 +13,10 @@ import { ref } from "vue";
 
 const cameraRef = ref<InstanceType<typeof Camera>>();
 const takePicture = async () => {
-  const blob = await cameraRef.value?.snapshot();
+  if (!cameraRef.value) throw new Error("Camera not found");
+
+  const blob = await cameraRef.value.snapshot();
+
   if (!blob) throw new Error("No image found");
 
   const url = URL.createObjectURL(blob);
