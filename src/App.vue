@@ -7,25 +7,16 @@
       @click="() => (cameraActive = true)"
     />
 
-    <div class="cameraContainer" v-if="cameraActive">
-      <camera ref="camera" autoplay></camera>
-      <div class="buttonContainer">
-        <Button primary :text="'scan item'" @click="takePicture"></Button>
-      </div>
-    </div>
+    <Camera v-if="cameraActive" />
   </div>
 </template>
 <script setup lang="js">
 import { ref } from "vue";
 import Button from "./components/Button.vue";
+import Camera from "./components/Camera.vue";
 
 const text = "click to scan item";
 const cameraActive = ref(false);
-
-const takePicture = () => {
-  const picture = webcam.value.snap();
-  console.log(picture);
-};
 </script>
 
 <style scoped lang="scss">
@@ -41,23 +32,6 @@ const takePicture = () => {
     width: 260px;
     text-transform: uppercase;
     font-weight: bold;
-  }
-
-  .cameraContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-    .buttonContainer {
-      position: absolute;
-      bottom: 40px;
-    }
   }
 }
 </style>
