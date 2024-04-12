@@ -1,7 +1,7 @@
 <template>
   <div class="cameraContainer">
     <camera ref="cameraRef" autoplay></camera>
-    <div class="buttonContainer">
+    <div class="footer">
       <Button primary :text="'scan item'" @click="takePicture"></Button>
     </div>
   </div>
@@ -35,10 +35,5 @@ const takePicture = async () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  .buttonContainer {
-    position: absolute;
-    bottom: 40px;
-  }
 }
 </style>

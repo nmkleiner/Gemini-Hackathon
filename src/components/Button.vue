@@ -36,6 +36,8 @@ const buttonClasses = computed(() => [
   border: none;
   font-size: 14px;
   cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
 
   &.primary,
   &.secondary {
