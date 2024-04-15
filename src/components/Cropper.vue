@@ -1,19 +1,10 @@
 <template>
   <div class="cropperContainer">
-    <VuePictureCropper
+    <Cropper
+      ref="cropperRef"
+      class="cropper"
       v-if="cropPicture"
-      :boxStyle="{
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#000',
-        margin: 'auto',
-      }"
-      :img="cropPicture"
-      :options="{
-        viewMode: 1,
-        dragMode: 'crop',
-        aspectRatio: 1,
-      }"
+      :src="cropPicture"
     />
 
     <div class="footer">
@@ -27,7 +18,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import VuePictureCropper, { cropper } from "vue-picture-cropper";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 import { onMounted, ref } from "vue";
 import LoaderButton from "@/components/LoaderButton.vue";
 
@@ -43,13 +35,14 @@ const loadPicture = () => {
 };
 onMounted(loadPicture);
 
+const cropperRef = ref<InstanceType<typeof Cropper>>();
 const crop = async () => {
-  if (!cropper) return;
-
-  const blob: Blob | null = await cropper.getBlob();
-  if (!blob) return;
-
-  emit("cropPicture", blob);
+  const { canvas } = cropperRef.value.getResult();
+  if (canvas) {
+    canvas.toBlob((blob) => {
+      emit("cropPicture", blob);
+    }, "image/jpeg");
+  }
 };
 </script>
 <style scoped lang="scss">
