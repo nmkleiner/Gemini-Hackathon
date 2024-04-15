@@ -20,11 +20,6 @@
     ],
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
   },
   "include": [
     "src/**/*.js",

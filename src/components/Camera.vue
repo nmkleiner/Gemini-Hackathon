@@ -8,7 +8,7 @@
 </template>
 <script setup lang="ts">
 import Camera from "simple-vue-camera";
-import Button from "@/components/Button.vue";
+import Button from "./Button.vue";
 import { ref } from "vue";
 
 const cameraRef = ref<InstanceType<typeof Camera>>();

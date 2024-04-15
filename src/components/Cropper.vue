@@ -21,7 +21,7 @@
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import { onMounted, ref } from "vue";
-import LoaderButton from "@/components/LoaderButton.vue";
+import LoaderButton from "./LoaderButton.vue";
 
 const props = defineProps<{ picture: Blob; isLoading: boolean }>();
 const emit = defineEmits({ cropPicture: (blob: Blob) => blob.size });

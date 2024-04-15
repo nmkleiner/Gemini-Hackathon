@@ -11,11 +11,10 @@
       :is-loading="isLoading"
       @cropPicture="handlePictureCropped"
     />
-
-    <img
+    <Results
       v-if="activeState === 'results'"
-      :src="croppedPicture"
-      alt="cropped item"
+      :picture="croppedPicture"
+      @goBack="activeState = 'initial'"
     />
 
     <div class="footer" v-if="activeState === 'initial'">
@@ -33,6 +32,7 @@ import { ref } from "vue";
 import Button from "./components/Button.vue";
 import Camera from "./components/Camera.vue";
 import Cropper from "./components/Cropper.vue";
+import Results from "./components/Results.vue";
 
 const activeState = ref<"initial" | "camera" | "cropper" | "results">(
   "initial",
