@@ -55,7 +55,20 @@ const croppedPicture = ref<string>("");
 const handlePictureCropped = async (blob: Blob) => {
   const getItemDetails = async () => {
     isLoading.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const formData = new FormData();
+    formData.append("image", blob);
+    const apiResult = (
+      await fetch("https://gemini-1cex.onrender.com/generate", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).json();
+    console.log("apiResult", apiResult);
+
     isLoading.value = false;
   };
   croppedPicture.value = URL.createObjectURL(blob);
