@@ -62,9 +62,6 @@ const handlePictureCropped = async (blob: Blob) => {
       await fetch("https://gemini-1cex.onrender.com/generate", {
         method: "POST",
         body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
       })
     ).json();
     console.log("apiResult", apiResult);
