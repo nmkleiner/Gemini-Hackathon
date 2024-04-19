@@ -9,8 +9,8 @@
     </div>
 
     <div class="productHeader">
-      <div class="maker" v-text="'Made by ' + item.maker"></div>
-      <div class="productName" v-text="item.productName"></div>
+      <div class="maker" v-text="'Made by ' + results.companyName"></div>
+      <div class="productName" v-text="results.productName"></div>
     </div>
 
     <div class="tabs">
@@ -42,43 +42,33 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import Button from "./Button.vue";
 
-defineProps<{ picture: string }>();
+const { results } = defineProps<{
+  picture: string;
+  results: {
+    companyName: string;
+    productName: string;
+    about: string;
+    techSpecs: { Material: string; Features: string; Compatibility: string };
+    url: string;
+    similarItems: Array<{ name: string; price: string }>;
+  };
+}>();
 const emit = defineEmits(["goBack"]);
 
 const selectedTab = ref(1);
-const item = reactive({
-  maker: "Microsoft",
-  productName: "Surface Laptop 4",
-  about:
-    "The Surface Laptop 4 is a powerful laptop with a 13.5-inch or 15-inch touchscreen display, and a choice of Intel or AMD processors.",
-  specs: "13.5-inch or 15-inch touchscreen display, Intel or AMD processors",
-  similarItems: [
-    {
-      maker: "Apple",
-      productName: "MacBook Pro",
-    },
-    {
-      maker: "Dell",
-      productName: "XPS 13",
-    },
-    {
-      maker: "HP",
-      productName: "Spectre x360",
-    },
-  ],
-});
+
 const description = computed(() => {
   switch (selectedTab.value) {
     case 1:
-      return item.about;
+      return results.about;
     case 2:
-      return item.specs;
+      return `${results.techSpecs.Material} ${results.techSpecs.Features} ${results.techSpecs.Compatibility}`;
     case 3:
-      return item.similarItems
-        .map((i) => `${i.maker} ${i.productName}`)
+      return results.similarItems
+        .map((i) => `${i.name} ${i.price}`)
         .join("</br> ");
   }
 });

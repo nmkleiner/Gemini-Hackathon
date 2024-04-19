@@ -14,6 +14,7 @@
     <Results
       v-if="activeState === 'results'"
       :picture="croppedPicture"
+      :results="apiResults"
       @goBack="activeState = 'initial'"
     />
 
@@ -51,26 +52,26 @@ const handlePictureTaken = (blob: Blob) => {
 
 const isLoading = ref(false);
 const croppedPicture = ref<string>("");
+const apiResults = ref<any>(null);
 
 const handlePictureCropped = async (blob: Blob) => {
   const getItemDetails = async () => {
-    isLoading.value = true;
-
     const formData = new FormData();
     formData.append("image", blob);
-    const apiResult = (
+    return (
       await fetch("https://gemini-1cex.onrender.com/generate", {
         method: "POST",
         body: formData,
       })
     ).json();
-    console.log("apiResult", apiResult);
-
-    isLoading.value = false;
   };
+  isLoading.value = true;
   croppedPicture.value = URL.createObjectURL(blob);
-  await getItemDetails();
+
+  apiResults.value = await getItemDetails();
+
   activeState.value = "results";
+  isLoading.value = false;
 };
 </script>
 
