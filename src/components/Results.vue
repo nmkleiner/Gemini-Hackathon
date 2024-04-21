@@ -37,7 +37,7 @@
       <div class="productDescription" v-html="description"></div>
     </div>
     <div class="footer">
-      <Button text="view buying options" @click="emit('goBack')" primary />
+      <Button text="view buying options" @click="openPurchaseUrl" primary />
     </div>
   </div>
 </template>
@@ -51,9 +51,9 @@ const { results } = defineProps<{
     companyName: string;
     productName: string;
     about: string;
-    techSpecs: { Material: string; Features: string; Compatibility: string };
-    url: string;
-    similarItems: Array<{ name: string; price: string }>;
+    techSpecs: Record<string, string>;
+    purchaseURL: string;
+    similarItem: Array<{ name: string; price: string }>;
   };
 }>();
 const emit = defineEmits(["goBack"]);
@@ -65,13 +65,19 @@ const description = computed(() => {
     case 1:
       return results.about;
     case 2:
-      return `${results.techSpecs.Material} ${results.techSpecs.Features} ${results.techSpecs.Compatibility}`;
+      return Object.entries(results.techSpecs)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join("</br> ");
     case 3:
-      return results.similarItems
+      return results.similarItem
         .map((i) => `${i.name} ${i.price}`)
         .join("</br> ");
   }
 });
+
+const openPurchaseUrl = () => {
+  window.open(results.purchaseURL, "_blank");
+};
 </script>
 <style scoped lang="scss">
 .resultsContainer {
@@ -134,6 +140,7 @@ const description = computed(() => {
       padding: 10px 0;
       border-bottom: white 1px solid;
       user-select: none;
+      font-size: 18px;
 
       &.selected {
         color: #00a9e4;
@@ -147,7 +154,7 @@ const description = computed(() => {
     padding: 20px 0;
 
     .productDescription {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.5;
       padding: 0 10px;
     }
