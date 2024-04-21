@@ -5,6 +5,7 @@
       class="cropper"
       v-if="cropPicture"
       :src="cropPicture"
+      :imageRestriction="'fill-area'"
     />
 
     <div class="footer">
