@@ -29,25 +29,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Button from "./components/Button.vue";
 import Camera from "./components/Camera.vue";
 import Cropper from "./components/Cropper.vue";
 import Results from "./components/Results.vue";
+import { useAppStore } from "./stores/app.store";
 
-const activeState = ref<"initial" | "camera" | "cropper" | "results">(
-  "initial",
-);
+const appStore = useAppStore();
+const activeState = computed(() => appStore.activeState);
 
-const openCamera = () => {
-  activeState.value = "camera";
-};
+const openCamera = () => appStore.setActiveState("camera");
 
 const picture = ref<Blob | null>(null);
 
 const handlePictureTaken = (blob: Blob) => {
   picture.value = blob;
-  activeState.value = "cropper";
+  appStore.setActiveState("cropper");
 };
 
 const isLoading = ref(false);
@@ -72,11 +70,11 @@ const analyzeCroppedPicture = async (blob: Blob) => {
     apiResults.value = await getItemDetails();
   } catch (error) {
     alert("Something went wrong, please try again");
-    activeState.value = "initial";
+    appStore.setActiveState("initial");
     return;
   }
 
-  activeState.value = "results";
+  appStore.setActiveState("results");
   isLoading.value = false;
 };
 </script>
