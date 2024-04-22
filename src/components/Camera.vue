@@ -1,6 +1,11 @@
 <template>
   <div class="cameraContainer">
-    <camera ref="cameraRef" autoplay @started="onStart"></camera>
+    <camera
+      ref="cameraRef"
+      autoplay
+      @started="onStart"
+      :resolution="{ width: 1080, height: 1320 }"
+    ></camera>
     <div class="footer" v-if="displayButton">
       <Button primary :text="'scan item'" @click="takePicture"></Button>
     </div>

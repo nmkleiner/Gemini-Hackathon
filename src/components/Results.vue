@@ -36,9 +36,16 @@
     <div class="productDescriptionContainer">
       <div class="productDescription" v-html="description"></div>
     </div>
-    <div class="footer">
-      <Button text="view buying options" @click="openPurchaseUrl" primary />
-    </div>
+  </div>
+
+  <div class="footer">
+    <Button
+      v-if="displayPurchaseUrl"
+      text="view buying options"
+      @click="openPurchaseUrl"
+      primary
+    />
+    <Button v-else text="not available" @click="emit('goBack')" primary />
   </div>
 </template>
 <script setup lang="ts">
@@ -65,9 +72,11 @@ const description = computed(() => {
     case 1:
       return results.about;
     case 2:
-      return Object.entries(results.techSpecs)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("</br> ");
+      return typeof results.techSpecs === "string"
+        ? results.techSpecs
+        : Object.entries(results.techSpecs)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join("</br> ");
     case 3:
       return results.similarItem
         .map((i) => `${i.name} ${i.price}`)
@@ -75,17 +84,21 @@ const description = computed(() => {
   }
 });
 
+const displayPurchaseUrl = computed(
+  () => results.purchaseURL && results.purchaseURL.includes("http"),
+);
 const openPurchaseUrl = () => {
   window.open(results.purchaseURL, "_blank");
 };
 </script>
 <style scoped lang="scss">
 .resultsContainer {
-  width: 100vw;
-  height: 100vh;
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: calc(100vw - 24px);
+  height: calc(100vh - 138px);
+  overflow-y: scroll;
   padding: 10px;
   color: white;
 

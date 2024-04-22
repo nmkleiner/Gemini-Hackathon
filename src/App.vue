@@ -9,7 +9,7 @@
       v-if="activeState === 'cropper'"
       :picture="picture"
       :is-loading="isLoading"
-      @cropPicture="handlePictureCropped"
+      @cropPicture="analyzeCroppedPicture"
     />
     <Results
       v-if="activeState === 'results'"
@@ -54,7 +54,7 @@ const isLoading = ref(false);
 const croppedPicture = ref<string>("");
 const apiResults = ref<any>(null);
 
-const handlePictureCropped = async (blob: Blob) => {
+const analyzeCroppedPicture = async (blob: Blob) => {
   const getItemDetails = async () => {
     const formData = new FormData();
     formData.append("image", blob);
@@ -68,7 +68,13 @@ const handlePictureCropped = async (blob: Blob) => {
   isLoading.value = true;
   croppedPicture.value = URL.createObjectURL(blob);
 
-  apiResults.value = await getItemDetails();
+  try {
+    apiResults.value = await getItemDetails();
+  } catch (error) {
+    alert("Something went wrong, please try again");
+    activeState.value = "initial";
+    return;
+  }
 
   activeState.value = "results";
   isLoading.value = false;
@@ -79,16 +85,18 @@ const handlePictureCropped = async (blob: Blob) => {
 .container {
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   height: 100vh;
   width: 100vw;
 
   .logo {
     font-size: 40px;
+    padding: 80% 0 0;
     font-weight: bold;
     color: #00a9e4;
-    font-family: "Roboto, sans-serif";
+    font-family: Roboto, sans-serif;
   }
 
   .footer {
