@@ -63,7 +63,7 @@ const openPurchaseUrl = () => window.open(results.value.purchaseURL, "_blank");
   align-items: center;
   flex-direction: column;
   width: calc(100vw - 24px);
-  height: calc(100vh - 138px);
+  height: calc(100vh - 139px - 40px);
   overflow-y: scroll;
   padding: 10px;
   color: white;
@@ -84,7 +84,7 @@ const openPurchaseUrl = () => window.open(results.value.purchaseURL, "_blank");
   .imageContainer {
     img {
       max-width: 100%;
-      max-height: 100%;
+      max-height: 300px;
     }
   }
 
