@@ -12,23 +12,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import Camera from "simple-vue-camera";
-import Button from "./Button.vue";
 import { ref } from "vue";
+import Button from "./Button.vue";
+import Camera from "simple-vue-camera";
+import { useAppStore } from "../stores/app.store";
 
 const cameraRef = ref<InstanceType<typeof Camera>>();
 
 const displayButton = ref(false);
 const onStart = () => (displayButton.value = true);
 
-const emit = defineEmits({ takePicture: (blob: Blob) => blob.size });
 const takePicture = async () => {
   if (!cameraRef.value) throw new Error("Camera not found");
 
   const blob = await cameraRef.value.snapshot();
 
   if (!blob) throw new Error("No image found");
-  emit("takePicture", blob);
+  useAppStore().takePicture(blob);
 };
 </script>
 

@@ -11,9 +11,9 @@
     <div class="footer">
       <LoaderButton
         primary
-        :text="isLoading ? 'analyzing' : 'crop item'"
+        :text="loading ? 'analyzing' : 'crop item'"
         @click="crop"
-        :loading="isLoading"
+        :loading="loading"
       ></LoaderButton>
     </div>
   </div>
@@ -21,17 +21,19 @@
 <script setup lang="ts">
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import LoaderButton from "./LoaderButton.vue";
+import { useAppStore } from "../stores/app.store";
 
-const props = defineProps<{ picture: Blob; isLoading: boolean }>();
-const emit = defineEmits({ cropPicture: (blob: Blob) => blob.size });
+const appStore = useAppStore();
+const loading = computed(() => appStore.loading);
+const picture = computed(() => appStore.picture);
 
 const cropPicture = ref<string>();
 
 const loadPicture = () => {
   const reader = new FileReader();
-  reader.readAsDataURL(props.picture);
+  reader.readAsDataURL(picture.value);
   reader.onload = () => (cropPicture.value = String(reader.result));
 };
 onMounted(loadPicture);
@@ -41,7 +43,7 @@ const crop = async () => {
   const { canvas } = cropperRef.value.getResult();
   if (canvas) {
     canvas.toBlob((blob) => {
-      emit("cropPicture", blob);
+      appStore.analyzeCroppedPicture(blob);
     }, "image/jpeg");
   }
 };

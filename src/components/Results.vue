@@ -1,7 +1,7 @@
 <template>
   <div class="resultsContainer">
     <div class="header">
-      <span class="link" @click="emit('goBack')">Try again</span>
+      <span class="link" @click="goBack">Try again</span>
     </div>
 
     <div class="imageContainer">
@@ -15,22 +15,11 @@
 
     <div class="tabs">
       <div
-        @click="selectedTab = 1"
-        :class="['tab', { selected: selectedTab === 1 }]"
+        v-for="(tab, index) in tabs"
+        @click="() => setSelectedTab(index)"
+        :class="['tab', { selected: selectedTab === index }]"
       >
-        About
-      </div>
-      <div
-        @click="selectedTab = 2"
-        :class="['tab', { selected: selectedTab === 2 }]"
-      >
-        Tech specs
-      </div>
-      <div
-        @click="selectedTab = 3"
-        :class="['tab', { selected: selectedTab === 3 }]"
-      >
-        Similar items
+        {{ tab }}
       </div>
     </div>
     <div class="productDescriptionContainer">
@@ -45,51 +34,28 @@
       @click="openPurchaseUrl"
       primary
     />
-    <Button v-else text="not available" @click="emit('goBack')" primary />
+    <Button v-else text="not available" @click="goBack" primary />
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import Button from "./Button.vue";
+import { useAppStore } from "../stores/app.store";
 
-const { results } = defineProps<{
-  picture: string;
-  results: {
-    companyName: string;
-    productName: string;
-    about: string;
-    techSpecs: Record<string, string>;
-    purchaseURL: string;
-    similarItem: Array<{ name: string; price: string }>;
-  };
-}>();
-const emit = defineEmits(["goBack"]);
+const appStore = useAppStore();
+const { setSelectedTab } = appStore;
+const picture = computed(() => appStore.croppedPicture);
+const results = computed(() => appStore.apiResults);
+const selectedTab = computed(() => appStore.selectedTab);
+const description = computed(() => appStore.resultsDescription);
 
-const selectedTab = ref(1);
+const tabs = ["About", "Tech specs", "Similar items"];
 
-const description = computed(() => {
-  switch (selectedTab.value) {
-    case 1:
-      return results.about;
-    case 2:
-      return typeof results.techSpecs === "string"
-        ? results.techSpecs
-        : Object.entries(results.techSpecs)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join("</br> ");
-    case 3:
-      return results.similarItem
-        .map((i) => `${i.name} ${i.price}`)
-        .join("</br> ");
-  }
-});
-
+const goBack = () => appStore.$reset();
 const displayPurchaseUrl = computed(
-  () => results.purchaseURL && results.purchaseURL.includes("http"),
+  () => results.value.purchaseURL && results.value.purchaseURL.includes("http"),
 );
-const openPurchaseUrl = () => {
-  window.open(results.purchaseURL, "_blank");
-};
+const openPurchaseUrl = () => window.open(results.value.purchaseURL, "_blank");
 </script>
 <style scoped lang="scss">
 .resultsContainer {
