@@ -63,7 +63,7 @@ const goBack = () => appStore.$reset();
   align-items: center;
   flex-direction: column;
   width: calc(100vw - 24px);
-  height: calc(100vh - 139px - 40px);
+  height: calc(100vh - 20px - 40px);
   overflow-y: scroll;
   padding: 10px;
   color: white;
