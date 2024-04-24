@@ -3,10 +3,11 @@
     <Cropper
       ref="cropperRef"
       class="cropper"
-      v-if="cropPicture"
+      v-if="cropPicture && !loading"
       :src="cropPicture"
       :imageRestriction="'fill-area'"
     />
+    <img v-else-if="loading" :src="cropPicture" />
 
     <div class="footer">
       <LoaderButton
