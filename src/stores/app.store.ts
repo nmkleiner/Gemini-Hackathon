@@ -11,7 +11,7 @@ interface State {
     about: string;
     techSpecs: Record<string, string> | string;
     purchaseURL: string;
-    similarItem: Array<{ name: string; price: string }>;
+    similarItem: Array<{ name: string; price: string }> | string;
   };
   selectedTab: number;
 }
@@ -87,9 +87,11 @@ export const useAppStore = defineStore("app", {
                 .map(([key, value]) => `${key}: ${value}`)
                 .join("</br> ");
         case 2:
-          return this.apiResults.similarItem
-            .map((i) => `${i.name} ${i.price}`)
-            .join("</br> ");
+          return typeof this.apiResults.similarItem === "string"
+            ? this.apiResults.similarItem
+            : this.apiResults.similarItem
+                .map((i) => `${i.name} ${i.price}`)
+                .join("</br> ");
       }
     },
   },
