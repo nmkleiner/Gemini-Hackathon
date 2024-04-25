@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="logo" v-if="activeState === 'initial'">ItemScanner</div>
+    <div class="logo" v-if="activeState === 'initial'">AIdentifier</div>
     <Camera v-if="activeState === 'camera'" />
     <Cropper v-if="activeState === 'cropper'" />
     <Results v-if="activeState === 'results'" />
