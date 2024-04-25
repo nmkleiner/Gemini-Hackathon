@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="logo" v-if="activeState === 'initial'">AIdentifier</div>
+    <div class="logo" v-if="activeState === 'initial'">AIdentify</div>
     <Camera v-if="activeState === 'camera'" />
     <Cropper v-if="activeState === 'cropper'" />
     <Results v-if="activeState === 'results'" />
@@ -8,7 +8,7 @@
     <div class="footer" v-if="activeState === 'initial'">
       <Button
         class="mainButton"
-        :text="'scan your item'"
+        :text="'identify your item'"
         primary
         @click="openCamera"
       />
