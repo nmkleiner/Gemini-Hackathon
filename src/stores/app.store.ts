@@ -5,15 +5,17 @@ interface State {
   loading: boolean;
   picture: Blob;
   croppedPicture: string;
-  apiResults: {
-    companyName: string;
-    productName: string;
-    about: string;
-    techSpecs: Record<string, string> | string;
-    purchaseURL: string;
-    similarItem: Array<{ name: string; price: string }> | string;
-  };
+  apiResults: ApiResults;
   selectedTab: number;
+}
+
+interface ApiResults {
+  companyName: string;
+  productName: string;
+  about: string;
+  techSpecs: Record<string, string> | string;
+  purchaseURL: string;
+  similarItem: Array<{ name: string; price: string }> | string;
 }
 
 export const useAppStore = defineStore("app", {
@@ -33,7 +35,11 @@ export const useAppStore = defineStore("app", {
       this.setPicture(blob);
       this.setActiveState("cropper");
     },
-    async getItemDetails(blob: Blob) {
+    async getItemDetails(
+      blob: Blob,
+    ): Promise<
+      { success: true; data: ApiResults } | { success: false; data: string }
+    > {
       const formData = new FormData();
       formData.append("image", blob);
       return (
@@ -48,7 +54,14 @@ export const useAppStore = defineStore("app", {
       this.setCroppedPicture(URL.createObjectURL(blob));
 
       try {
-        this.apiResults = await this.getItemDetails(blob);
+        const response = await this.getItemDetails(blob);
+
+        if (response.success === false) {
+          this.processError(response.data);
+          this.$reset();
+        } else {
+          this.apiResults = response.data;
+        }
       } catch (error) {
         alert("Something went wrong, please try again");
         //  reset all state
@@ -58,6 +71,58 @@ export const useAppStore = defineStore("app", {
 
       this.setActiveState("results");
       this.setLoading(false);
+    },
+    processError(error: string) {
+      const errorArray = error.split(", ");
+      const categories = errorArray.map((e) => {
+        const [part1, part2] = e.split("\n");
+        const category = part1.split(": ")[1];
+        const probability = part2.split(": ")[1];
+        return { category, probability };
+      });
+      const highProbabilityErrors = categories.filter(
+        (value) => value.probability === "HIGH",
+      );
+      const mediumProbabilityErrors = categories.filter(
+        (value) => value.probability === "MEDIUM",
+      );
+      const lowProbabilityErrors = categories.filter(
+        (value) => value.probability === "LOW",
+      );
+      const negligibleProbabilityErrors = categories.filter(
+        (value) => value.probability === "NEGLIGIBLE",
+      );
+      const start = "Your item has a ";
+      const end =
+        " therefore it is not possible to provide accurate information. Please try with a different image.";
+      if (highProbabilityErrors.length > 0) {
+        alert(
+          start +
+            `high probability of ${highProbabilityErrors[0].category}` +
+            end,
+        );
+        return;
+      } else if (mediumProbabilityErrors.length > 0) {
+        alert(
+          start +
+            `medium probability of ${mediumProbabilityErrors[0].category}` +
+            end,
+        );
+        return;
+      } else if (lowProbabilityErrors.length > 0) {
+        alert(
+          start +
+            `low probability of ${lowProbabilityErrors[0].category}` +
+            end,
+        );
+        return;
+      } else if (negligibleProbabilityErrors.length > 0) {
+        alert(
+          start +
+            `negligible probability of ${negligibleProbabilityErrors[0].category}` +
+            end,
+        );
+      }
     },
     setActiveState(state: "initial" | "camera" | "cropper" | "results") {
       this.activeState = state;
