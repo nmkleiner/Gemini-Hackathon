@@ -27,15 +27,15 @@
     </div>
   </div>
 
-  <!--  <div class="footer">-->
-  <!--    <Button-->
-  <!--      v-if="displayPurchaseUrl"-->
-  <!--      text="view buying options"-->
-  <!--      @click="openPurchaseUrl"-->
-  <!--      primary-->
-  <!--    />-->
-  <!--    <Button v-else text="not available" @click="goBack" primary />-->
-  <!--  </div>-->
+  <div class="footer">
+    <Button
+      v-if="displayPurchaseUrl"
+      text="view buying options"
+      @click="openPurchaseUrl"
+      primary
+    />
+    <Button v-else text="not available" @click="goBack" primary />
+  </div>
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
@@ -52,10 +52,10 @@ const description = computed(() => appStore.resultsDescription);
 const tabs = ["About", "Tech specs", "Similar items"];
 
 const goBack = () => appStore.$reset();
-// const displayPurchaseUrl = computed(
-//   () => results.value.purchaseURL && results.value.purchaseURL.includes("http"),
-// );
-// const openPurchaseUrl = () => window.open(results.value.purchaseURL, "_blank");
+const displayPurchaseUrl = computed(
+  () => results.value.purchaseURL && results.value.purchaseURL.includes("http"),
+);
+const openPurchaseUrl = () => window.open(results.value.purchaseURL, "_blank");
 </script>
 <style scoped lang="scss">
 .resultsContainer {
