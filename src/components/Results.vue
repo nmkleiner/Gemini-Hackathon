@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-// import Button from "./Button.vue";
+import Button from "./Button.vue";
 import { useAppStore } from "../stores/app.store";
 
 const appStore = useAppStore();
